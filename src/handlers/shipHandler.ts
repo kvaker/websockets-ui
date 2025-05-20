@@ -61,18 +61,20 @@ export function handleAddShips(ws: WebSocket, message: IncomingMessage) {
     id: 0,
   }));
 
-  const allReady = room.roomUsers.length === 2 && room.roomUsers.every(u => u.ships);
+  const allReady = room.roomUsers.every(u => u.ships);
   if (allReady) {
     room.roomUsers.forEach(u => {
       const socket = roomStore.getSocketByPlayerIndex(u.index);
-      socket?.send(JSON.stringify({
-        type: 'game_ready',
-        data: JSON.stringify({
-        roomId: room.roomId,
-        message: 'Both players added ships. Game is ready to start!',
-      }),
-        id: 0,
-      }));
+      if (socket) {
+        socket.send(JSON.stringify({
+          type: 'game_ready',
+          data: JSON.stringify({
+            roomId: room.roomId,
+            message: 'Both players added ships. Game is ready to start!',
+          }),
+          id: 0,
+        }));
+      }
     });
   }
 
