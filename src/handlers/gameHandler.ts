@@ -20,7 +20,7 @@ export function handleAttack(ws: WebSocket, message: any) {
   if (!session) {
     return ws.send(JSON.stringify({
       type: 'error',
-      data: { message: 'User not registered' },
+      data: JSON.stringify({ message: 'User not registered' }),
       id: 0,
     }));
   }
@@ -29,7 +29,7 @@ export function handleAttack(ws: WebSocket, message: any) {
   if (!room) {
     return ws.send(JSON.stringify({
       type: 'error',
-      data: { message: 'Room not found' },
+      data: JSON.stringify({ message: 'Room not found' }),
       id: 0,
     }));
   }
@@ -38,7 +38,7 @@ export function handleAttack(ws: WebSocket, message: any) {
   if (!opponent) {
     return ws.send(JSON.stringify({
       type: 'error',
-      data: { message: 'Opponent not found' },
+      data: JSON.stringify({ message: 'Opponent not found' }),
       id: 0,
     }));
   }
@@ -64,13 +64,13 @@ export function handleAttack(ws: WebSocket, message: any) {
     if (targetSession) {
       targetSession.socket.send(JSON.stringify({
         type: 'attack',
-        data: {
-          position: { x, y },
-          currentPlayer: session.index,
-          status, // miss | shot | killed
-        },
-        id: 0,
-      }));
+        data: JSON.stringify({
+    position: { x, y },
+    currentPlayer: session.index,
+    status,
+  }),
+  id: 0,
+     }));
     }
   }
 
@@ -102,7 +102,7 @@ export function handleTurn(ws: WebSocket, message: any) {
   if (!session) {
     return ws.send(JSON.stringify({
       type: 'error',
-      data: { message: 'User not registered' },
+      data: JSON.stringify({ message: 'User not registered' }),
       id: 0,
     }));
   }
@@ -111,7 +111,7 @@ export function handleTurn(ws: WebSocket, message: any) {
   if (!room) {
     return ws.send(JSON.stringify({
       type: 'error',
-      data: { message: 'Room not found' },
+      data: JSON.stringify({ message: 'Room not found' }),
       id: 0,
     }));
   }
@@ -120,26 +120,22 @@ export function handleTurn(ws: WebSocket, message: any) {
   if (!opponent) {
     return ws.send(JSON.stringify({
       type: 'error',
-      data: { message: 'Opponent not found' },
+      data: JSON.stringify({ message: 'Opponent not found' }),
       id: 0,
     }));
   }
 
   ws.send(JSON.stringify({
-    type: 'turn',
-    data: {
-      currentPlayer: session.index,
-    },
-    id: 0,
+      type: 'turn',
+      data: JSON.stringify({ currentPlayer: session.index }),
+      id: 0,
   }));
 
   const opponentSession = sessions.get(opponent.index);
   if (opponentSession) {
     opponentSession.socket.send(JSON.stringify({
       type: 'turn',
-      data: {
-        currentPlayer: opponent.index,
-      },
+      data: JSON.stringify({ currentPlayer: opponent.index }),
       id: 0,
     }));
   }
@@ -152,7 +148,7 @@ export function handleFinish(ws: WebSocket, message: any) {
   if (!session) {
     return ws.send(JSON.stringify({
       type: 'error',
-      data: { message: 'User not registered' },
+      data: JSON.stringify({ message: 'User not registered' }),
       id: 0,
     }));
   }
@@ -161,7 +157,7 @@ export function handleFinish(ws: WebSocket, message: any) {
   if (!room) {
     return ws.send(JSON.stringify({
       type: 'error',
-      data: { message: 'Room not found' },
+      data: JSON.stringify({ message: 'Room not found' }),
       id: 0,
     }));
   }
@@ -170,7 +166,7 @@ export function handleFinish(ws: WebSocket, message: any) {
   if (!opponent) {
     return ws.send(JSON.stringify({
       type: 'error',
-      data: { message: 'Opponent not found' },
+      data: JSON.stringify({ message: 'Opponent not found' }),
       id: 0,
     }));
   }
@@ -190,7 +186,7 @@ export function handleFinish(ws: WebSocket, message: any) {
   
   return ws.send(JSON.stringify({
     type: 'error',
-    data: { message: 'Game is not finished yet' },
+    data: JSON.stringify({ message: 'Game is not finished yet' }),
     id: 0,
   }));
 
@@ -200,9 +196,7 @@ export function handleFinish(ws: WebSocket, message: any) {
       if (socket) {
         socket.send(JSON.stringify({
           type: 'finish',
-          data: {
-            winPlayer: winnerIndex,
-          },
+          data: JSON.stringify({ winPlayer: winnerIndex }),
           id: 0,
         }));
       }

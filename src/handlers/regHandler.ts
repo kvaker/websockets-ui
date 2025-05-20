@@ -7,17 +7,17 @@ export function handleRegistration(ws: WebSocket, message: any) {
 
   const { user, errorText } = registerUser(name, password);
 
-  let response;
+  let payload;
 
   if (errorText) {
-    response = {
+    payload = {
       type: 'reg',
-      data: {
+      data: JSON.stringify({
         name,
         index: null,
         error: true,
-        errorText: errorText,
-      },
+        errorText,
+      }),
       id: 0,
     };
   } else if (user) {
@@ -27,30 +27,30 @@ export function handleRegistration(ws: WebSocket, message: any) {
       socket: ws,
     });
 
-    response = {
+    payload = {
       type: 'reg',
-      data: {
+      data: JSON.stringify({
         name,
         index: user.index,
         error: false,
         errorText: '',
-      },
+      }),
       id: 0,
     };
   } else {
-    response = {
+    payload = {
       type: 'reg',
-      data: {
+      data: JSON.stringify({
         name,
         index: null,
         error: true,
         errorText: 'Unknown error occurred.',
-      },
+      }),
       id: 0,
     };
   }
 
-  console.log('Sending registration response:', JSON.stringify(response));
-
-  ws.send(JSON.stringify(response));
+  console.log('Sending to frontend:', payload);
+  ws.send(JSON.stringify(payload));
 }
+

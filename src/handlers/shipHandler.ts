@@ -13,7 +13,7 @@ export function handleAddShips(ws: WebSocket, message: IncomingMessage) {
     console.log('Session not found for ws:', ws);
     return ws.send(JSON.stringify({
       type: 'error',
-      data: { message: 'User not registered' },
+      data: JSON.stringify({ message: 'User not registered' }),
       id: 0,
     }));
   }
@@ -21,7 +21,7 @@ export function handleAddShips(ws: WebSocket, message: IncomingMessage) {
   if (!ships || !gameId) {
     return ws.send(JSON.stringify({
       type: 'error',
-      data: { message: 'Missing ships or gameId' },
+      data: JSON.stringify({ message: 'Missing ships or gameId' }),
       id: 0,
     }));
   }
@@ -32,7 +32,7 @@ export function handleAddShips(ws: WebSocket, message: IncomingMessage) {
   if (!room) {
     return ws.send(JSON.stringify({
       type: 'error',
-      data: { message: 'Room not found' },
+      data: JSON.stringify({ message: 'Room not found' }),
       id: 0,
     }));
   }
@@ -41,7 +41,7 @@ export function handleAddShips(ws: WebSocket, message: IncomingMessage) {
   if (!player) {
     return ws.send(JSON.stringify({
       type: 'error',
-      data: { message: 'Player not in room' },
+      data: JSON.stringify({ message: 'Player not in room' }),
       id: 0,
     }));
   }
@@ -57,7 +57,7 @@ export function handleAddShips(ws: WebSocket, message: IncomingMessage) {
 
   ws.send(JSON.stringify({
     type: 'add_ships',
-    data: { success: true },
+    data: JSON.stringify({ success: true }),
     id: 0,
   }));
 
@@ -67,10 +67,10 @@ export function handleAddShips(ws: WebSocket, message: IncomingMessage) {
       const socket = roomStore.getSocketByPlayerIndex(u.index);
       socket?.send(JSON.stringify({
         type: 'game_ready',
-        data: {
-          roomId: room.roomId,
-          message: 'Both players added ships. Game is ready to start!',
-        },
+        data: JSON.stringify({
+        roomId: room.roomId,
+        message: 'Both players added ships. Game is ready to start!',
+      }),
         id: 0,
       }));
     });
